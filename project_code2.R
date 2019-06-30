@@ -180,7 +180,7 @@ write.csv(output_data2, file=file.choose(), row.names=F)
 write.csv(output_data4, file=file.choose(), row.names=F)
 
 # (21) 이제 지금까지 작업으로 얻은 자료의 음운이웃 목록을 만듭니다. 
-#기존 작업을 이어서 하는 경우에는 바로 x = as.character(phoneme_klat)을 이용해서 발음기호로 변환된 단어eㅡㄹ을 문자로 변환하고 
+#기존 작업을 이어서 하는 경우에는 바로 x = as.character(phoneme_klat)을 이용해서 발음기호로 변환된 단어를 문자로 변환하고 
 # 외부의 저장된 phoneme_klat을 사용할 경우에는 phoneme_klat = read.csv(file = file.choose(), header = TRUE)으로 R 내부로 불러 들인 후  
 # x <- as.character(as.matrix(phoneme_klat))을 
 # 사용하여 원자료의 데이터 유형인 데이터 프레임을 행렬(matrix)로 변환하여 다시 문자로 변환합니다. 
@@ -200,7 +200,8 @@ cl <- makeCluster(detectCores())
 registerDoParallel(cl)
 
 # 무엇을 unit으로 할지 지정합니다 (Klattese 혹은 자모 혹은 IPA...) 음운이웃을 따질 unit으로 표기된 표제어 목록을 object 'x' 로 지정합니다. 
-예컨대, 아래 예시처럼, 앞서 1.3에서 생성한 object 'klat'을 x에 집어넣으면 klattese symbol상 unit distance = 1인 두 단어를 음운이웃으로 산출합니다.
+# 예컨대, 아래 예시처럼, 앞서 1.3에서 생성한 object 'klat'을 x에 집어넣으면 
+# klattese symbol상 unit distance = 1인 두 단어를 음운이웃으로 산출합니다.
 
 
 # phoneme_klat = read.csv(file = file.choose(), header = TRUE)
@@ -306,6 +307,9 @@ net4 =graph_from_data_frame(d=neighbor_result4, vertices=single_data,directed=F)
 plot(net, vertex.label=single_data$entry, vertex.shape="none", vertex.label.cex=0.8, edge.width=2, edge.arrow.size=0, margin=0)
 plot(net2, vertex.label=single_data$entry, vertex.shape="none", vertex.label.cex=0.8, edge.width=2, edge.arrow.size=0, margin=0)
 plot(net4, vertex.label=single_data$entry, vertex.shape="none", vertex.label.cex=0.8, edge.width=2, edge.arrow.size=0, margin=0)
+
+# 발음기호로 이웃관계 시각화
+# plot(net2, vertex.label=x2, vertex.shape="none", vertex.label.cex=0.8, edge.width=2, edge.arrow.size=0, margin=0)
 
 # <대안>  edge_network라는 이름으로 igraph object를 생성합니다. 
 # igraph에 포함된 함수 graph_from_data_frame를 이용합니다. 이 함수가 취하는 argument에는 여러가지가 있는데, 
@@ -499,6 +503,7 @@ pseudo_lexicon = random_lexicon(x) # input의 phonotactics를 기반으로 bigra
 # Klattese2의 결과
 if(length(which(is.na(x2)))>0) x2 <- x2[-which(is.na(x2))]
 pseudo_lexicon2 = random_lexicon(x2) 
+
 # Klattese4의 결과
 if(length(which(is.na(x4)))>0) x4 <- x4[-which(is.na(x4))]
 pseudo_lexicon4 = random_lexicon(x4) 
@@ -905,8 +910,10 @@ write.csv(phoneme_syllable_klat4, file=file.choose(), row.names=F)
 # 꼬리 표시와 동음이의어가 제거된 데이터인 single_dat에서 id와 entry, afreq만 남긴 single_data_klat를 만들고
 # 거기에다가 위 코드 작동 결과인 phoneme_syllable_klat를 더한 데이터 single_data_klat를 만듭니다.   
 single_data_klat <- single_data[,c(1:2,5)]
+single_data_klat2 <- single_data[,c(1:2,5)]
+
 single_data_klat <- cbind(single_data_klat,phoneme_syllable_klat)
-single_data_klat2 <- cbind(single_data_klat,phoneme_syllable_klat2)
+single_data_klat2 <- cbind(single_data_klat2,phoneme_syllable_klat2)
 single_data_klat4 <- cbind(single_data_klat,phoneme_syllable_klat4)
 
 # 위 코드 작동의 결과인 single_data2를 확인하고 R 밖으로 저장합니다. 
@@ -1519,7 +1526,7 @@ genPNN <- function (x, deletion = T) {
 # (46) 이제 이용해서 음운이웃 목록을 만들어봅시다.
 # 먼저, 교체/첨가/삭제로 인해 형성되는 음절 기반 음운이웃을 syllable_neighbor_result1으로 저장합니다. 
 
-syllable_neighbor_result1 <- genPNN(syllable_result, deletion = T)
+syllable_neighbor_result2 <- genPNN(syllable_result2, deletion = T)
 write.csv(syllable_neighbor_result1, file=file.choose(), row.names=F)
 
 # 다음으로, 단지 교체로 인해 형성되는 음절 기반 음운이웃을 syllable_neighbor_result2로 저장합니다
